@@ -36,6 +36,9 @@ def zclear(dataframe, origPixSize, ZBinFac, IPD):
     return dataframe
 
 
+#################################################
+############## PARAMETERS #######################
+#################################################
 directory = sys.argv[1]
 coordsdirectory = sys.argv[2]
 origPixelSize = float(1.57)       #original pixel size of tomogram, IN ANGSTROMS
