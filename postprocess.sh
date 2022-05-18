@@ -6,34 +6,22 @@
 #SBATCH -n 2
 #SBATCH --export ALL
 
-for d in * ; do
-	echo "Starting averaging for $d"
-	pwd=$(pwd)
-	INPUT="$pwd""/""$d""/""$d""_full_rec.mrc"
-	SAMPLE="$pwd""/""$d""/"
-	#echo $INPUT
-	#echo $SAMPLE
-	python3 /home/shervin/PycharmProjects/cry11btomo/Segmentation/AvgSlices.py $INPUT
-done
-echo "AvgSlice png created! Opening selection box..."
+SAMPLE="/speed/jargroup/Tomos/08-29-21_Cry11b_WT_UnprocessedData/Cry11b_WT_05/"
+FILE="Cry11b_WT_05_full_rec.mrc"
+INPUT="$SAMPLE""$FILE"
 
-for d in * ; do
-        echo "Starting selection box for $d"
-        pwd=$(pwd)
-        INPUT="$pwd""/""$d""/""$d""_full_rec.mrc"
-        SAMPLE="$pwd""/""$d""/"
-        #echo $INPUT
-        #echo $SAMPLE
-        python3 /home/shervin/PycharmProjects/cry11btomo/Segmentation/SelectVol.py $INPUT $SAMPLE
-done
+echo "Starting averaging for $d"
+pwd=$(pwd)
+python /home/shervinnia/Tomograms/TomoTrim/AvgSlices.py $INPUT
+
+"AvgSlice png created! Opening selection box..."
 
 
-for d in * ; do
-        echo "Starting trimming for $d"
-        pwd=$(pwd)
-        INPUT="$pwd""/""$d""/""$d""_full_rec.mrc"
-        SAMPLE="$pwd""/""$d""/"
-        #echo $INPUT
-        #echo $SAMPLE
-        python3 /home/shervin/PycharmProjects/cry11btomo/Segmentation/TrimSel.py $INPUT $SAMPLE
-done
+echo "Starting selection box for $d"
+pwd=$(pwd)
+python /home/shervinnia/Tomograms/TomoTrim/SelectVol.py $INPUT $SAMPLE
+
+
+echo "Starting trimming for $d"
+pwd=$(pwd)
+python /home/shervinnia/Tomograms/TomoTrim/TrimSel.py $INPUT $SAMPLE
