@@ -9,16 +9,21 @@ import mrcfile
 from alive_progress import alive_bar
 
 
-
 ########################
 ###### Parameters ######
 ########################
 
-directory = sys.argv[1]
-coords_file = sys.argv[2]
-mrc_file = sys.argv[3]
+coords_file = sys.argv[1]
+mrc_file = sys.argv[2]
 pixelSize = float(1.57)
 IPD = 70
+IPDpix = int(np.multiply(IPD,pixelSize))
+print(IPDpix)
+totalpoints = 15000
+N = 1  # only keep every N point from generated grid
+minZ = 1500
+maxZ = 4500
+
 
 pixDist = int(IPD / (pixelSize))
 print(pixDist)
@@ -48,11 +53,23 @@ print(f"MaxY = {maxY}")
 
 coords = dict()
 
+
+
+
+
+
 with mrcfile.mmap(mrc_file, mode='r') as im:
-    ind = np.ndindex(int((maxX-minX)/IPD), int((maxY-minY)/IPD), int(np.min(im.data.shape)/IPD))
+    print(int((maxX-minX)/IPDpix))
+    print(int((maxY-minY)/IPDpix))
+    print(int(np.min(im.data.shape)/IPDpix))
+    print(im.data.shape)
+    ind = np.ndindex(int((maxX-minX)/IPDpix), int((maxY-minY)/IPDpix), int((im.data.shape[0])/IPDpix))
 
 
 coords = pd.DataFrame(ind, columns=["rlnCoordinateX", "rlnCoordinateY", "rlnCoordinateZ"])
+
+
+
 
 
 ########################################
@@ -63,6 +80,12 @@ coords = coords.mul(IPD)
 coords["rlnCoordinateX"] = coords["rlnCoordinateX"].add(minX)
 coords["rlnCoordinateY"] = coords["rlnCoordinateY"].add(minY)
 
+
+### Get rid of all points outside of acceptable Z range ###
+coords = coords[coords['rlnCoordinateZ'] < maxZ]
+coords = coords[coords['rlnCoordinateZ'] > minZ]
+
+coords = coords[coords.reset_index().index % int(N) == 0]
 
 coords.insert(0, "rlnTomoName", "Cry11b_WT_05", True)
 
