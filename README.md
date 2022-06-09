@@ -19,3 +19,18 @@ Here we open up the PNG created with AvgSlices.py in a GUI and drag a box around
 
 ### TrimVol.py
 This script reads the coordinates saved by SelectVol.py and creates the new trimmed tomogram slice-by-slice (memory-mapped objects must be processed in a for-loop, as they still do take up RAM when being processed).
+
+
+
+
+
+
+
+
+# Other scripts
+
+## mrc2gif
+Fairly straightforward MATLAB script. Converts MRC files to GIFs with any chosen binning factor.
+
+## CheckDatLattice
+Takes an input tomogram (must be binned beforehand) and creates various views of the tomogram to analyze. These views include various projections (XY, YZ, XZ) of the 3D FFT of the tomogram. This script could be used as a setup to perform any kind of fourier filtering.
